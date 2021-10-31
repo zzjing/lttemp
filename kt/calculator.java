@@ -1,5 +1,5 @@
 public int calculate(String s) {
-    Stack<Integer> buffer = new Stack<>();
+    // Stack<Integer> buffer = new Stack<>();
     int result = 0;
     int number = 0;
     int sign = 1;
