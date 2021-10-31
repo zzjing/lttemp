@@ -54,24 +54,12 @@ public Map<String, String[]> logFirstAndLastAccess(String[][] logs) {
         String accessTime = log[0];
         String user = log[1];
         if (!userToAccess.containsKey(user)) {
-            userToAccess.put(user, new String[2]);
+            userToAccess.put(user, new String[2]{accessTime, accessTime});
         }
-        if (userToAccess.get(user)[0] == null &&
-            userToAccess.get(user)[1] == null) {
+        if (Integer.parseInt(accessTime) < Integer.parseInt(userToAccess.get(user)[0])) {
             userToAccess.get(user)[0] = accessTime;
-        } else if (userToAccess.get(user)[1] == null) {
-            if (Integer.parseInt(accessTime) > Integer.parseInt(userToAccess.get(user)[0])) {
-                userToAccess.get(user)[1] = accessTime;
-            } else if (Integer.parseInt(accessTime) < Integer.parseInt(userToAccess.get(user)[0])) {
-                userToAccess.get(user)[1] = userToAccess.get(user)[0];
-                userToAccess.get(user)[0] = accessTime;
-            }
-        } else {
-            if (Integer.parseInt(accessTime) < Integer.parseInt(userToAccess.get(user)[0])) {
-                userToAccess.get(user)[0] = accessTime;
-            } else if (Integer.parseInt(accessTime) > Integer.parseInt(userToAccess.get(user)[1])) {
-                userToAccess.get(user)[1] = accessTime;
-            }
+        } else if (Integer.parseInt(accessTime) > Integer.parseInt(userToAccess.get(user)[1])) {
+            userToAccess.get(user)[1] = accessTime;
         }
     }
     return userToAccess;
