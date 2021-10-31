@@ -1,0 +1,462 @@
+public int[] getLegalMoves(int i, int j) {
+    return new int[]{{i - 1, j}, {i + 1, j}, {i, j - 1}, {i, j + 1}};
+}
+
+public boolean canVisitAllZeroes(int[][] matrix, int x, int y) {
+    boolean[][] visited = new boolean[matrix.length - 1][matrix[0].length - 1];
+    visitZeroes(matrix, visited, x, y);
+    for (int i = 0; i < matrix.length; i++) {
+        for (int j = 0; j < matrix[0].length; j++) {
+            if (matrix[i][j] == 0 && !visited[i][j]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+private void visitZeroes(int[][] matrix, boolean[][] visited, int x, int y) {
+    if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length || visited[x][y] || matrix[x][y] != 0) {
+        return;
+    }
+    visited[x][y] = true;
+    visitZeroes(matrix, visited, x - 1, y);
+    visitZeroes(matrix, visited, x + 1, y);
+    visitZeroes(matrix, visited, x, y - 1);
+    visitZeroes(matrix, visited, x, y + 1);
+}
+
+public boolean canSchedule(int[][] meetings, int start, int end) {
+    int[] newMeeting = new int[]{start, end};
+    for (int[] meeting : meetings) {
+        if (checkOverlap(newMeeting, meeting)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+private boolean checkOverlap(int[] meetingA, int[] meetingB) {
+    int lateStart = Math.max(meetingA[0], meetingB[0]);
+    int earlyEnd = Math.min(meetingA[1], meetingB[1]);
+    return lateStart < earlyEnd;
+}
+
+public List<int[]> getAvailableSlots(List<int[]> meetings) {
+    List<int[]> freeTimes = new ArrayList<>();
+    Collections.sort(meetings, (a, b) -> (a.get(0) - b.get(0)));
+    int[] previous = meetings.get(0);
+    freeTimes.add(new int[]{0, previous[0]});
+    for (int i = 1; i < meetings.size(); i++) {
+        int[] current = meetings.get(i);
+        if (!checkOverlap(previous, current)) {
+            freeTimes.add(new int[]{previous[1], current[0]});
+            previous = current;
+        } else {
+            previous[1] = Math.max(previous[1], current[1]);
+            meetings.remove(i);
+            i--;
+        }
+    }
+    return freeTimes;
+}
+
+private boolean checkOverlap(int[] meetingA, int[] meetingB) {
+    int lateStart = Math.max(meetingA[0], meetingB[0]);
+    int earlyEnd = Math.min(meetingA[1], meetingB[1]);
+    return lateStart <= earlyEnd;
+}
+
+public List<Integer> findNodesWithZeroOrOneParent(int[][] edges) {
+    Map<Integer, List<Integer>> childToParents = new HashMap<>();
+    for (int[] edge : edges) {
+        int parentNode = edge[0];
+        int childNode = edge[1];
+        if (!childToParents.containsKey(childNode)) {
+            childToParents.put(childNode, new ArrayList<>());
+        }
+        if (!childToParents.containsKey(parentNode)) {
+            childToParents.put(parentNode, new ArrayList<>());
+        }
+        childToParents.get(childNode).add(parentNode);
+    }
+    List<Integer> nodesWithZeroOrOneParent = new ArrayList<>();
+    for (Integer child : childToParents.keySet()) {
+        if (childToParent.get(child).size() <= 1) {
+            nodesWithZeroOrOneParent.add(child);
+        }
+    }
+    return nodesWithZeroOrOneParent;
+}
+
+public boolean hasCommonAncestor(int[][] edges, int p, int q) {
+    Map<Integer, List<Integer>> childToParents = new HashMap<>();
+    for (int[] edge : edges) {
+        int parentNode = edge[0];
+        int childNode = edge[1];
+        if (!childToParents.containsKey(childNode)) {
+            childToParents.put(childNode, new ArrayList<>());
+        }
+        if (!childToParents.containsKey(parentNode)) {
+            childToParents.put(parentNode, new ArrayList<>());
+        }
+        childToParents.get(childNode).add(parentNode);
+    }
+    Set<Integer> commonAncestors = new HashSet<>();
+    for (Integer child : childToParents.keySet()) {
+        if (child == p || child == q) {
+            for (Integer parent : childToParents.get(child)) {
+                if (!commonAncestors.add(parent)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+public List<int[]> findOneRectangle(int[][] board) {
+    List<int[]> rectangles = new ArrayList<>();
+    int row = board.length;
+    int col = board[0].length;
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            if (board[i][j] == 0) {
+                int x1 = i;
+                int y1 = j;
+                rectangles.add(new int[]{x1, y1});
+                int width = 1;
+                int height = 1;
+                while (j + width < col && board[i][j] == 0) {
+                    width++;
+                }
+                while (i + height < row && board[i][j] == 0) {
+                    height++;
+                }
+                rectangles.add(new int[][]{i + height - 1, j + width - 1});
+                return rectangles;
+            }
+        }
+    }
+    return rectangles;
+}
+
+public List<List<int[]>> findAllRectangles(int[][] board) {
+    List<List<int[]>> rectangles = new ArrayList<>();
+    int row = board.length;
+    int col = board[0].length;
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            if (board[i][j] == 0) {
+                int x1 = i;
+                int y1 = j;
+                List<int[]> rect = new ArrayList<>();
+                rect.add(new int[]{x1, y1});
+                int width = 1;
+                int height = 1;
+                while (j + width < col && board[i][j] == 0) {
+                    width++;
+                }
+                while (i + height < row && board[i][j] == 0) {
+                    height++;
+                }
+                for (int h = 0; h < height; h++) {
+                    for (int w = 0; w < width; w++) {
+                        board[i + h][j + w] = 1;
+                    }
+                }
+                rect.add(new int[][]{i + height - 1, j + width - 1});
+                rectangles.add(rect);
+            }
+        }
+    }
+    return rectangles;
+}
+
+public List<List<int[]>> findAllShapes(int[][] board) {
+    List<List<int[]>> allShapes = new ArrayList<>();
+    for (int i = 0; i < board.length; i++) {
+        for (int j = 0; j < board[0].length; j++) {
+            if (board[i][j] == 0) {
+                List<int[]> shape = new ArrayList<>();
+                exploreShape(board, i, j, shape);
+                allShapes.add(shape);
+            }
+        }
+    }
+    return allShapes;
+}
+
+private void exploreShape(int[][] board, int x, int y, List<int[]> shape) {
+    if (x < 0 || x >= board.length || y < 0 || y >= board[0].length || board[x][y] != 0) {
+        return;
+    }
+    shape.add(new int[]{{x, y}});
+    board[x][y] = 1;
+    exploreShape(board, x - 1, y, shape);
+    exploreShape(board, x + 1, y, shape);
+    exploreShape(board, x, y - 1, shape);
+    exploreShape(board, x, y + 1, shape);
+}
+
+public boolean isMatrixValid(int[][] matrix, int n) {
+    for (int i = 0; i < matrix.length; i++) {
+        Set<Integer> rowSet = new HashSet<>();
+        Set<Integer> colSet = new HashSet<>();
+        int rowMin = Integer.MAX_VALUE;
+        int rowMax = Integer.MIN_VALUE;
+        int colMin = Integer.MAX_VALUE;
+        int colMax = Integer.MIN_VALUE;
+        for (int j = 0; j < matrix[0].length; j++) {
+            if (!rowSet.contains(matrix[i][j])) {
+                rowSet.add(matrix[i][j]);
+                rowMin = Math.min(rowMin, matrix[i][j]);
+                rowMax = Math.max(rowMax, matrix[i][j]);
+            } else {
+                return false;
+            }
+            if (!colSet.contains(matrix[j][i])) {
+                colSet.add(matrix[j][i]);
+                colMin = Math.min(colMin, matrix[j][i]);
+                colMax = Math.max(colMax, matrix[j][i]);
+            } else {
+                return false;
+            }
+        }
+        if (rowMin != 1 || colMin != 1 || rowMax != n || colMax != n) {
+            return false;
+        }
+    }
+    return true;
+}
+
+public boolean isValidNonoGram(int[][] matrix, int[][] rowRules, int[][] colRules) {
+    int row = matrix.length;
+    int col = matrix[0].length;
+    if (row != rowRules.length || col != colRules.length) {
+        return false;
+    }
+    return isRowsValid(matrix, rowRules, row, col) && isColsValid(matrix, colRules, row, col);
+}
+
+private boolean isRowsValid(int[][] matrix, int[][] rowRules, int row, int col) {
+    for (int i = 0; i < row; i++) {
+        int rowRuleIndex = 0;
+        for (int j = 0; j < col; j++) {
+            if (matrix[i][j] == 0) {
+                if (rowRules[i].length == 0) {
+                    return false;
+                }
+                for (int k = 0; k < rowRules[rowRuleIndex]; k++) {
+                    if (j + k >= col) {
+                    }
+                }
+            }
+        }
+    }
+}
+
+private boolean isColsValid(int[][] matrix, int[][] colRules, int row, int col) {
+
+}
+
+public String[][] findInvalidAccess(String[][] records) {
+    Map<String, Integer> employeeToState = new HashMap<>(); // 1 - on campus, 0 off
+    Set<String> noBadgeEntry = new HashSet<>();
+    Set<String> noBadgeExit = new HashSet<>();
+    for (String[] record : records) {
+        String employee = record[0];
+        String action = record[1];
+        if (!employeeToState.containsKey(employee)) {
+            employeeToState.put(employee, 0);
+        }
+        if (action.euqals("enter")) {
+            if (employeeToState.get(employee) == 1) {
+                noBadgeExit.add(employee);
+            }
+            employeeToState.put(employee, 1);
+        } else {
+            if (employeeToState.get(employee) == 0) {
+                noBadgeEntery.add(employee);
+            }
+            employeeToState.put(employee, 0);
+        }
+    }
+    return new String[][]{noBadgeEntry.toArray(noBadgeEntry.size()), noBadgeExit.toArray(noBadgeExit.size())};
+}
+
+public List<String> frequentAccess(String[][] keycardInfo) {
+    Map<String, TreeSet<Integer>> nameToTimes = new HashMap<>();
+    for (String[] keycard : keycardInfo) {
+        String name = keycard[0];
+        String time = keycard[1];
+        int hours = Integer.parseInt(time.substring(0, 2));
+        int minutes = Integer.parseInt(time.substring(2));
+        if (!nameToTimes.containsKey(name)) {
+            nameToTimes.put(name, new TreeSet<>());
+        }
+        nameToTimes.get(name).add(hours + minutes);
+    }
+    Set<String> alertNames = new HashSet<>();
+    for (String name : nameToTimes.keySet()) {
+        List<Integer> sortedTimes = new ArrayList<>(nameToTimes.get(name));
+        for (int i = 2; i < sortedTimes.size(); i++) {
+            if (sortedTimes.get(i) - sortedTimes.get(i - 2) <= 60) {
+                alertNames.add(name);
+                break;
+            }
+        }
+    }
+    return new ArrayList<>(alertNames);
+}
+
+public Map<String, String[]> logFirstAndLastAccess(String[][] logs) {
+    Map<String, String[]> userToAccess = new HashMap<>();
+    for (String[] log : logs) {
+        String accessTime = log[0];
+        String user = log[1];
+        if (!userToAccess.containsKey(user)) {
+            userToAccess.put(user, new String[2]);
+        }
+        if (userToAccess.get(user)[0] == null &&
+            userToAccess.get(user)[1] == null) {
+            userToAccess.get(user)[0] = accessTime;
+        } else if (userToAccess.get(user)[1] == null) {
+            if (Integer.parseInt(accessTime) > Integer.parseInt(userToAccess.get(user)[0])) {
+                userToAccess.get(user)[1] = accessTime;
+            } else if (Integer.parseInt(accessTime) < Integer.parseInt(userToAccess.get(user)[0])) {
+                userToAccess.get(user)[1] = userToAccess.get(user)[0];
+                userToAccess.get(user)[0] = accessTime;
+            }
+        } else {
+            if (Integer.parseInt(accessTime) < Integer.parseInt(userToAccess.get(user)[0])) {
+                userToAccess.get(user)[0] = accessTime;
+            } else if (Integer.parseInt(accessTime) > Integer.parseInt(userToAccess.get(user)[1])) {
+                userToAccess.get(user)[1] = accessTime;
+            }
+        }
+    }
+    return userToAccess;
+}
+
+public String logMostAccess(String[][] logs) {
+    Map<String, TreeSet<Integer>> resourceToTimes = new HashMap<>();
+    for (String[] log : logs) {
+        String accessTime = log[0];
+        String resource = log[2];
+        if (!resourceToTimes.containsKey(resource)) {
+            resourceToTimes.put(resource, new TreeSet<>());
+        }
+        resourceToTimes.get(resource).add(Integer.parseInt(accessTime));
+    }
+    int maxAccess = 0;
+    String maxResource = "";
+    for (String resourceAccessed : resourceToTimes.keySet()) {
+        List<Integer> accessTimes = new ArrayList<>(resourceToTimes.get(resourceAccessed));
+        for (int i = 0; i < accessTimes.size(); i++) {
+            int accesses = 0;
+            int endTime = accessTimes.get(i) + 300;
+            int j = i;
+            while (accessTimes.get(j) <= endTime && j < accessTimes.size()) {
+                accesses++;
+                j++;
+                if (accesses > maxAccess) {
+                    maxResource = resource;
+                }
+            }
+        }
+    }
+    return maxResource;
+}
+
+public List<String> subdomainVisits(String[] cpdomains) {
+    Map<String, Integer> subdomainToCount = new HashMap<>();
+    for (String cpdomain : cpdomains) {
+        int spaceIndex = cpdomain.indexOf(' ');
+        int visitCount = Integer.valueOf(cpdomain.substring(0, spaceIndex));
+        String domainName = cpdomain.substring(spaceIndex + 1);
+        for (int i = 0; i < domainName.length(); i++) {
+            char current = domainName.charAt(i);
+            if (current == '.') {
+                String subdomainName = domainName.substring(i + 1);
+                if (!subdomainToCount.containsKey(subdomainName)) {
+                    subdomainToCount.put(subdomainName, visitCount);
+                } else {
+                    subdomainToCount.put(subdomainName, subdomainToCount.get(subdomainName) + visitCount);
+                }
+            }
+        }
+        if (!subdomainToCount.containsKey(domainName)) {
+            subdomainToCount.put(domainName, visitCount);
+        } else {
+            subdomainToCount.put(domainName, subdomainToCount.get(domainName) + visitCount);
+        }
+    }
+    List<String> visits = new ArrayList<>();
+    for (String subdomain : subdomainToCount.keySet()) {
+        visits.add(subdomainToCount.get(subdomain) + " " + subdomain);
+    }
+    return visits;
+}
+
+public String longestCommonContinuousSubarray(String[] texts1, String[] texts2) {
+    int[][] longestContinuousMemo = new int[texts1.length + 1][text2.length + 1];
+    int maxLen = 0;
+    String[] maxLenSubarray = "";
+    for (int i = 1; i <= texts1.length; i++) {
+        for (int j = 1; j <= texts2.length; j++) {
+            if (texts1[i - 1].equals(texts2[j - 1])) {
+                longestContinuousMemo[i][j] = longestContinuousMemo[i - 1][j - 1] + 1;
+                if (longestContinuousMemo[i][j] > maxLen) {
+                    maxLen = longestContinuousMemo[i][j];
+                    maxLenSubarray = Arrays.asList(texts1).subList(i - maxLen, i).toArray(new String[maxLen]);
+                }
+            }
+        }
+    }
+    return maxLenSubarray;
+}
+
+public int longestCommonSubsequence(String text1, String text2) {
+    int[][] memoLCS = new int[text1.length() + 1][text2.length() + 1];
+    for (int i = 1; i <= text1.length(); i++) {
+        for (int j = 1; j <= text2.length(); j++) {
+            if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                memoLCS[i][j] = memoLCS[i - 1][j - 1] + 1;
+            } else {
+                memoLCS[i][j] = Math.max(memoLCS[i - 1][j], memoLCS[i][j - 1]);
+            }
+        }
+    }
+    return memoLCS[text1.length()][text2.length()];
+}
+
+public List<String> adsConversionRate(String[] completedPurchaseUsers, String[] adClicks, String[] allUserIPs) {
+    Set<String> completedPurchaseIds = new HashSet<>(completedPurchaseUsers);
+    Map<String, String[]> adToConversion = new HashMap<>();
+    Map<String, String> ipToUserId = new HashMap<>();
+    for (String userIpPair : allUserIPs) {
+        String[] userAndIp = userIpPair.split(",");
+        ipToUserId.put(userAndIp[1], userAndIp[0]);
+    }
+    for (String clicksInfo : adClicks) {
+        String[] parsedClicks = clicksInfo.split(",");
+        String ip = parsedClicks[0];
+        String ad = parsedClicks[2];
+        if (!adToConversion.containsKey(ad)) {
+            adToConversion.put(ad, new int[]{0, 1});
+        } else {
+            adtoConversion.get(ad)[1]++;
+        }
+        if (ipToUserId.containsKey(ip) && completedPurchaseIds.contains(ipToUserId.get(ip))) {
+            adToConversion.get(ad)[0]++;
+        }
+    }
+    List<String> adConvRate = new ArrayList<>();
+    for (String ad : adToConversion.keySet()) {
+        adConvRate.add(adToConversion.get(ad)[0] + " of " + adToConversion.get(ad)[1] + " " + ad);
+    }
+    return adConvRate;
+}
+
+public 
