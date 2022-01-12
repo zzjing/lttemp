@@ -83,7 +83,7 @@ class LinkedList {
             current2.next = endNode;
         }
         totalLength++; // after insertion
-    }
+    } // O(k * n) - k is fixed size, n is number of blocks
 
     // followup
     public void delete(int index) {
