@@ -26,7 +26,7 @@ public class GitCommit {
             }
         }
         return allCommits;
-    }
+    } // Time O(n) n = total # of commits; Space O(n + m)
 
     public GitNode findLCA(GitNode commit1, GitNode commit2) {
         if (commit1 == null || commit2 == null) {
@@ -71,5 +71,5 @@ public class GitCommit {
             }
         }
         return null;
-    }
+    } // Time O(n) n = total # of commits; Space O(n + m)
 }
