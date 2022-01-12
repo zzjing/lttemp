@@ -18,7 +18,7 @@ public int shortestDistance(String[] wordsDict, String word1, String word2) {
         }
     }
     return minDistance;
-}
+} // Time O(n * m) n = number of words, m = total length of two input words; Space O(1)
 
 class WordDistance { // query about word distances between two words
     Map<String, List<Integer>> wordToIndex; // all occurances
@@ -70,7 +70,7 @@ class WordDistance { // query about word distances between two words
         distanceCache.put(cacheKey, minDistance);
         distanceCache.put(cacheKeyReversed, minDistance);
         return minDistance;
-    }
+    } // Time O(n + m) Space O(n + m) number of words
 }
 /**
  * Your WordDistance object will be instantiated and called as such:
@@ -101,4 +101,4 @@ class WordDistance { // query about word distances between two words
             }
         }
         return minDistance;
-    }
+    } // Time O(n * m) n = number of words, m = total length of two input words; Space O(1)
