@@ -72,4 +72,4 @@ public class BTtoArray {
         }
         return record;
     }
-}
+} // Time O(n) Space O(n)
