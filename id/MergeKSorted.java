@@ -80,4 +80,4 @@ class MergeKSortedStreams {
         return result;
     }
 }
-Time O(n logm) m = list number, n total number of nodes; Space O(m) = O(1)
+// Time O(n logm) m = list number, n total number of nodes; Space O(m) m number of streams
