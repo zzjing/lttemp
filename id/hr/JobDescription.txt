@@ -1,0 +1,8 @@
+// 1. For each query, traverse every word in that query
+// and match it with every job description (say n jds, possibly n sets), compute n match scores
+// 2. Sort n match scores and get top 10 based on rules
+
+// inverted index:
+// Map<String, String> every word in jd --> jd that contains that word
+// get a query: traverse every word in query and compute match count for every jd
+// get top 10 based on rules 
