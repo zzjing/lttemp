@@ -5,4 +5,26 @@
 // inverted index:
 // Map<String, String> every word in jd --> jd that contains that word
 // get a query: traverse every word in query and compute match count for every jd
-// get top 10 based on rules 
+// get top 10 based on rules
+
+public List<String> topKFrequent(String[] words, int k) {
+        List<String> topK = new ArrayList<>();
+        Map<String, Integer> wordToFrequency = new HashMap<>();
+        for (String word : words) {
+            if (!wordToFrequency.containsKey(word)) {
+                wordToFrequency.put(word, 1);
+            } else {
+                wordToFrequency.put(word, wordToFrequency.get(word) + 1);
+            }
+        }
+        PriorityQueue<String> wordsRank =
+            new PriorityQueue<>(k, (a, b) -> wordToFrequency.get(a) == wordToFrequency.get(b) ?
+                a.compareTo(b) : wordToFrequency.get(b) - wordToFrequency.get(a));
+        for (String word : wordToFrequency.keySet()) {
+            wordsRank.offer(word);
+        }
+        for (int i = 0; i < k; i++) {
+            topK.add(wordsRank.poll());
+        }
+        return topK;
+    }
