@@ -1,0 +1,9 @@
+// Type 1: Map<String, Set<String>> user --> user search history
+// Map<String, Map<String, Integer>> word --> word's related words and related frequency
+
+// Type 2: Map<String, Set<String>> user --> user search history
+// Map<String, Set<String>> word --> word's related words
+
+// 1) Output result per input
+// 2) Read Map 1 update Map 2
+// 3) Update Map 1
